@@ -35,8 +35,8 @@ public class Deadline extends Task {
         String day = splitDates[0];
         String month = splitDates[1];
         String year = splitDates[2];
-        String editedDay; //String to store the day from numerical to words
-        String editedMonth; //String to store the month from numerical to words
+        String editedDay = ""; //String to store the day from numerical to words
+        String editedMonth = ""; //String to store the month from numerical to words
 
         if (day.equals("1") || day.equals("01")) {
             editedDay = "1st";
@@ -52,8 +52,10 @@ public class Deadline extends Task {
             editedDay = "23rd";
         } else if (day.equals("31")) {
             editedDay = "31st";
-        } else {
+        } else if (Integer.valueOf(day) < 31) {
             editedDay = day + "th";
+        } else {
+            assert false : "No such day";
         }
 
         switch (month) {
@@ -115,7 +117,7 @@ public class Deadline extends Task {
                 break;
 
             default:
-                editedMonth = "Invalid";
+                assert false : "Invalid month";
                 break;
 
         }

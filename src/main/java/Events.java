@@ -36,8 +36,8 @@ public class Events extends Task {
         String day = splitDates[0];
         String month = splitDates[1];
         String year = splitDates[2];
-        String editedDay;
-        String editedMonth;
+        String editedDay = "";
+        String editedMonth = "";
 
         if (day.equals("1") || day.equals("01")) {
             editedDay = "1st";
@@ -53,8 +53,10 @@ public class Events extends Task {
             editedDay = "23rd";
         } else if (day.equals("31")) {
             editedDay = "31st";
-        } else {
+        } else if (Integer.valueOf(day) < 31) {
             editedDay = day + "th";
+        } else {
+            assert false : "No such day";
         }
 
         switch (month) {
@@ -116,7 +118,7 @@ public class Events extends Task {
                 break;
 
             default:
-                editedMonth = "Invalid";
+                assert false : "Invalid month";
                 break;
 
         }
