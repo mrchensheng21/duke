@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public abstract class Task {
     protected String description;
-    protected Boolean isdone;
+    protected Boolean taskIsDone;
 
     /**
      * Task object is instantiated when User enters the description of task.
@@ -16,7 +16,7 @@ public abstract class Task {
      */
     protected Task (String description) {
         this.description = description;
-        this.isdone = false;
+        this.taskIsDone = false;
     }
 
     /**
@@ -33,7 +33,7 @@ public abstract class Task {
      * @return Status of task.
      */
     protected String getStatusIcon() {
-        return (isdone ? "\u2713" : "\u2718");
+        return (taskIsDone ? "\u2713" : "\u2718");
     }
 
     /**
@@ -41,11 +41,14 @@ public abstract class Task {
      * @return Status of task, "1" means its done and "0" means its yet to be completed.
      */
     protected String checkStatus() {
-        if (isdone == true) {
-            return "1";
+        String statusWhenSavingTask = "";
+        if (taskIsDone == true) {
+            statusWhenSavingTask = "1";
         } else {
-            return "0";
+            statusWhenSavingTask = "0";
         }
+
+        return statusWhenSavingTask;
     }
 
     /**
@@ -54,9 +57,9 @@ public abstract class Task {
      */
     protected void recoverStatus(String status) {
         if (status.equals("1")) {
-            isdone = true ;
+            taskIsDone = true;
         } else {
-            isdone = false;
+            taskIsDone = false;
         }
     }
 
@@ -64,7 +67,7 @@ public abstract class Task {
      * A flag to toggle when a task is done.
      */
     protected void markAsDone() {
-        isdone = true;
+        taskIsDone = true;
     }
 
     /**
@@ -78,9 +81,19 @@ public abstract class Task {
         String month = splitDates[1];
         String year = splitDates[2];
 
-        return this.getDay(day) + " of " + this.getMonth(month) + " " + year;
+        try {
+            return this.getDay(day) + " of " + this.getMonth(month) + " " + year;
+        } catch (ParseException parseError) {
+            return parseError.toString();
+        }
+
     }
 
+    /**
+     * Get the formatted day.
+     * @param day The numerical format of day.
+     * @return The formatted word of day.
+     */
     private String getDay(String day) {
         String editedDay = "";
 
@@ -108,77 +121,22 @@ public abstract class Task {
     }
 
     /**
-     * 
-     * @param month
-     * @return
+     * Get the formatted month.
+     * @param month Numerical month.
+     * @return Formatted word of month.
      */
-    private String getMonth(String month) {
-        String editedMonth = "";
+    private String getMonth(String month) throws ParseException {
 
-        switch (month) {
-            case "1":
-            case "01":
-                editedMonth = "January";
-                break;
-
-            case "2":
-            case "02":
-                editedMonth = "Febuary";
-                break;
-
-            case "3":
-            case "03":
-                editedMonth = "March";
-                break;
-
-            case "4":
-            case "04":
-                editedMonth = "April";
-                break;
-
-            case "5":
-            case "05":
-                editedMonth = "May";
-                break;
-
-            case "6":
-            case "06":
-                editedMonth = "June";
-                break;
-
-            case "7":
-            case "07":
-                editedMonth = "July";
-                break;
-
-            case "8":
-            case "08":
-                editedMonth = "August";
-                break;
-
-            case "9":
-            case "09":
-                editedMonth = "September";
-                break;
-
-            case "10":
-                editedMonth = "October";
-                break;
-
-            case "11":
-                editedMonth = "November";
-                break;
-
-            case "12":
-                editedMonth = "December";
-                break;
-
-            default:
-                assert false : "Invalid month";
-                break;
+        DateFormat df = new SimpleDateFormat("MM");
+        DateFormat outputFormat = new SimpleDateFormat("MMMM");
+        try {
+            Date strToMonth = df.parse(month);
+            String monthFormat = outputFormat.format(strToMonth);
+            return monthFormat;
+        } catch (ParseException parseError) {
+            return parseError.toString();
         }
 
-        return editedMonth;
     }
 
     /**
