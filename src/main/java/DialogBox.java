@@ -7,10 +7,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  * An example of a custom control using FXML.
@@ -22,6 +28,10 @@ public class DialogBox extends HBox {
     private Label dialog;
     @FXML
     private ImageView displayPicture;
+    @FXML
+    private Rectangle fill;
+    @FXML
+    private Pane root = new Pane();
 
     private DialogBox(String text, Image img) {
         try {
@@ -35,6 +45,25 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setImage(img);
+        fill = new Rectangle(displayPicture.getFitWidth(),
+                displayPicture.getFitHeight());
+        fill.setArcHeight(20);
+        fill.setArcWidth(20);
+        displayPicture.setClip(fill);
+
+
+        SnapshotParameters parameters = new SnapshotParameters();
+        parameters.setFill(Color.TRANSPARENT);
+        WritableImage image = displayPicture.snapshot(parameters, null);
+
+        displayPicture.setClip(null);
+        displayPicture.setEffect(new DropShadow(20, Color.BLACK));
+
+        displayPicture.setImage(image);
+
+
+
+
     }
 
     /**
@@ -65,6 +94,7 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getDukeDialog(String text, Image img) {
         var db = new DialogBox(text, img);
+        db.dialog.setMinHeight(Label.USE_PREF_SIZE);
         db.flip();
         return db;
     }
